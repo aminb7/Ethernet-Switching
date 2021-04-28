@@ -18,7 +18,9 @@
 #define ADD_SYSTEM_COMMAND "MySystem"
 #define CONNECT_COMMAND "Connect"
 #define QUIT_COMMAND "Quit"
-#define PATH_NAME "switch"
+#define SWITCH_PREFIX "switch"
+#define SYSTEM_PREFIX "system"
+#define PATH_NAME "system"
 #define FORK_FAILED_MESSAGE "Fork Failed!"
 #define READ_END 0
 #define WRITE_END 1

@@ -2,15 +2,12 @@
 
 int main(int argc, char const *argv[]) {
 	System system;
-	system.get_id_from_network();
+	system.set_props(argv[DATA]);
     cout << system.get_id();
 	return ZERO;
 }
 
-void System::get_id_from_network() {
-	char data[MAX_LINE];
-	int fd = open(PATH_NAME, O_RDONLY);
-    read(fd, data, MAX_LINE);
-    close(fd);
+void System::set_props(string data) {
     this->id = stoi(data);
+    this->path_name = PATH_PREFIX + data;
 }

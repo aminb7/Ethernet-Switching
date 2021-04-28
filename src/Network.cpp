@@ -25,8 +25,9 @@ void Network::handle_command(string command) {
 }
 
 int Network::add_switch(int number_of_ports, int switch_number) {
-	unlink(PATH_NAME);
-	mkfifo(PATH_NAME, READ_WRITE);
+    string path_name = SWITCH_PREFIX + to_string(switch_number);
+	unlink(path_name.c_str());
+	mkfifo(path_name.c_str(), READ_WRITE);
 	
 	int fd[TWO];	
 	Pid p;
@@ -43,21 +44,23 @@ int Network::add_switch(int number_of_ports, int switch_number) {
 	}
 	else {
 		close(fd[WRITE_END]);
-		char *args[] = {(Message)SWITCH_DIR, (Message)"1", NULL};
+        string switch_message = make_switch_message(number_of_ports, switch_number);
+		char *args[] = {(Message)SWITCH_DIR, (Message)switch_message.c_str(), NULL};
 		execv(args[ZERO], args);
 	}
 
-    string switch_message = make_switch_message(number_of_ports, switch_number);
+    //string switch_message = make_switch_message(number_of_ports, switch_number);
 
-	int fds = open(PATH_NAME, O_WRONLY);
-    write(fds, (Message) switch_message.c_str(), 
-    	strlen((Message) switch_message.c_str()) + ONE);
-    close(fds);
+	//int fds = open(PATH_NAME, O_WRONLY);
+    //write(fds, (Message) switch_message.c_str(), 
+    	//strlen((Message) switch_message.c_str()) + ONE);
+    //close(fds);
 }
 
 int Network::add_system(int system_number) {
-	unlink(PATH_NAME);
-	mkfifo(PATH_NAME, READ_WRITE);
+	string path_name = SYSTEM_PREFIX + to_string(system_number);
+	unlink(path_name.c_str());
+	mkfifo(path_name.c_str(), READ_WRITE);
 	
 	int fd[TWO];	
 	Pid p;
@@ -74,16 +77,10 @@ int Network::add_system(int system_number) {
 	}
 	else {
 		close(fd[WRITE_END]);
-		char *args[] = {(Message)SYSTEM_DIR, (Message)"1", NULL};
+        string system_message = to_string(system_number);
+		char *args[] = {(Message)SYSTEM_DIR, (Message)system_message.c_str(), NULL};
 		execv(args[ZERO], args);
 	}
-
-    string system_message = to_string(system_number);
-
-	int fds = open(PATH_NAME, O_WRONLY);
-    write(fds, (Message) system_message.c_str(), 
-    	strlen((Message) system_message.c_str()) + ONE);
-    close(fds);
 }
 
 string Network::make_switch_message(int number_of_ports, int switch_number) {

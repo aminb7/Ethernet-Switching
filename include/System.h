@@ -9,9 +9,10 @@
 #include <string>
 #include <iostream>
 
-#define PATH_NAME "system"
+#define PATH_PREFIX "system"
 #define ZERO 0
 #define MAX_LINE 2048
+#define DATA 1
 
 using namespace std;
 
@@ -19,10 +20,11 @@ class System {
 public:
     System() {}
     ~System();
-    void get_id_from_network();
+    void set_props(string data);
     int get_id() {return id;}
 private:
     int id;
+    string path_name;
 };
 
 System::~System()
