@@ -9,10 +9,16 @@
 #include <string>
 #include <iostream>
 
+#include "Utils.h"
+
 #define PATH_PREFIX "system"
 #define ZERO 0
 #define MAX_LINE 2048
 #define DATA 1
+#define COMMAND_SEPARATOR '@'
+#define CONNECT_COMMAND "Connect"
+#define COMMAND 0
+#define ARG1 1
 
 using namespace std;
 
@@ -21,10 +27,12 @@ public:
     System() {}
     ~System();
     void set_props(string data);
+    void handle_command();
     int get_id() {return id;}
 private:
     int id;
     string path_name;
+    string connection;
 };
 
 System::~System()
