@@ -32,18 +32,19 @@ class Switch {
 public:
     Switch() {}
     ~Switch();
+    void start(const char* args);
     void set_props(std::string data);
     void handle_command();
     void connect(std::string path);
     int get_id() {return id;}
-    std::string get_path() {return path_name;}
+    std::string get_path() {return network_pipe_path;}
 
 private:
     int id;
     int number_of_ports;
-    std::string path_name;
+    std::string network_pipe_path;
     std::map<std::string, std::string> lookup;
-    std::map<int, std::string> connections;
+    std::map<int, std::string> connection_pipe_paths;
 };
 
 Switch::~Switch()

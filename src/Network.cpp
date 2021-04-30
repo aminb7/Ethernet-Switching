@@ -34,9 +34,9 @@ void Network::handle_command(string command) {
 }
 
 int Network::add_switch(int number_of_ports, int switch_number) {
-    string path_name = SWITCH_PREFIX + to_string(switch_number);
-	unlink(path_name.c_str());
-	mkfifo(path_name.c_str(), READ_WRITE);
+    string network_pipe_path = SWITCH_PREFIX + to_string(switch_number);
+	unlink(network_pipe_path.c_str());
+	mkfifo(network_pipe_path.c_str(), READ_WRITE);
 	
 	Pid p;
 
@@ -59,9 +59,9 @@ int Network::add_switch(int number_of_ports, int switch_number) {
 }
 
 int Network::add_system(int system_number) {
-	string path_name = SYSTEM_PREFIX + to_string(system_number);
-	unlink(path_name.c_str());
-	mkfifo(path_name.c_str(), READ_WRITE);
+	string path_name_path = SYSTEM_PREFIX + to_string(system_number);
+	unlink(path_name_path.c_str());
+	mkfifo(path_name_path.c_str(), READ_WRITE);
 	
 	Pid p;
 

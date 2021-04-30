@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <vector>
 #include <string>
+#include <string.h>
 #include <iostream>
 
 #include "Utils.h"
@@ -22,16 +23,18 @@
 
 class System {
 public:
-    System() {}
+    System();
     ~System();
+    void start(const char* args);
     void set_props(std::string data);
-    void handle_command();
+    void handle_network_command(char* message);
+    void connect(std::string path);
     int get_id() {return id;}
 
 private:
     int id;
-    std::string path_name;
-    std::string connection;
+    std::string network_pipe_path;
+    std::string connection_pipe_path;
 };
 
 System::~System()
