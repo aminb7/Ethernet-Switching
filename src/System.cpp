@@ -20,9 +20,10 @@ void System::start(const char* args) {
     fd_set fds;
     int maxfd, activity;
     while (true) {
+        cout << "before open\n";
         int network_pipe_fd = open(this->network_pipe_path.c_str(), O_RDONLY);
         maxfd = network_pipe_fd;
-
+        cout << "after open\n";
         FD_ZERO(&fds);
         FD_SET(network_pipe_fd, &fds);
         int connection_pipe_fd;
@@ -42,8 +43,8 @@ void System::start(const char* args) {
         if (FD_ISSET(network_pipe_fd, &fds))
             handle_network_command(received_message);
 
-        if (connection_pipe_path != "" && FD_ISSET(connection_pipe_fd, &fds))
-            handle_network_command(received_message);
+        else if (connection_pipe_path != "" && FD_ISSET(connection_pipe_fd, &fds))
+            ; //handle other commands
 
         if (connection_pipe_path != "")
             close(connection_pipe_fd);

@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <vector>
 #include <string>
+#include <string.h>
 #include <iostream>
 #include <map>
 
@@ -34,7 +35,7 @@ public:
     ~Switch();
     void start(const char* args);
     void set_props(std::string data);
-    void handle_command();
+    void handle_network_command(char* message);
     void connect(std::string path);
     int get_id() {return id;}
     std::string get_path() {return network_pipe_path;}
