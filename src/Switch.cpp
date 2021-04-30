@@ -1,4 +1,5 @@
 #include "../include/Switch.h"
+#include <iostream>
 
 using namespace std;
 
@@ -27,7 +28,7 @@ void Switch::handle_command() {
     close(fd);
 
     vector<string> info = split(data, COMMAND_SEPARATOR);
-    
+
     if (info[COMMAND] == CONNECT_COMMAND) 
         connect(info[ARG1]);
 }

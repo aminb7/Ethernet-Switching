@@ -6,6 +6,7 @@ int main(int argc, char const *argv[]) {
 	string command;
 	Network network;
 	while(true) {
+		cout << "> ";
 		getline(cin, command);
 		if (command == QUIT_COMMAND) {
 			break;
@@ -37,7 +38,6 @@ int Network::add_switch(int number_of_ports, int switch_number) {
 	unlink(path_name.c_str());
 	mkfifo(path_name.c_str(), READ_WRITE);
 	
-	int fd[TWO];	
 	Pid p;
 
 	p = fork();
@@ -48,11 +48,9 @@ int Network::add_switch(int number_of_ports, int switch_number) {
 	}
 	else if (p > ZERO) {
 		this->switches.insert({switch_number, p});
-		close(fd[READ_END]);
 		return ZERO;
 	}
 	else {
-		close(fd[WRITE_END]);
         string switch_message = make_switch_message(number_of_ports, switch_number);
 		char *args[] = {(Message)SWITCH_DIR, (Message)switch_message.c_str(), NULL};
 		execv(args[ZERO], args);
@@ -65,7 +63,6 @@ int Network::add_system(int system_number) {
 	unlink(path_name.c_str());
 	mkfifo(path_name.c_str(), READ_WRITE);
 	
-	int fd[TWO];	
 	Pid p;
 
 	p = fork();
@@ -76,11 +73,9 @@ int Network::add_system(int system_number) {
 	}
 	else if (p > ZERO) {
 		this->systems.insert({system_number, p});
-		close(fd[READ_END]);
 		return ZERO;
 	}
 	else {
-		close(fd[WRITE_END]);
         string system_message = to_string(system_number);
 		char *args[] = {(Message)SYSTEM_DIR, (Message)system_message.c_str(), NULL};
 		execv(args[ZERO], args);

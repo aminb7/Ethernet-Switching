@@ -1,5 +1,7 @@
 #include "../include/Utils.h"
 
+using namespace std;
+
 vector<string> split(const string& s, char delimiter) {
    vector<string> tokens;
    string token;

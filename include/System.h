@@ -24,14 +24,14 @@ class System {
 public:
     System() {}
     ~System();
-    void set_props(string data);
+    void set_props(std::string data);
     void handle_command();
     int get_id() {return id;}
 
 private:
     int id;
-    string path_name;
-    string connection;
+    std::string path_name;
+    std::string connection;
 };
 
 System::~System()

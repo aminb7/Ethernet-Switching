@@ -21,6 +21,7 @@ void System::set_props(string data) {
 
 void System::handle_command() {
 	char data[MAX_LINE];
+    cout << "waiting for command." << endl;
 	int fd = open(this->path_name.c_str(), O_RDONLY);
     read(fd, data, MAX_LINE);
     close(fd);
