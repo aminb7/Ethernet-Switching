@@ -50,13 +50,13 @@ public:
     void handle_command(string command);
     int add_switch(int number_of_ports, int switch_number);
     int add_system(int system_number);
-    void send(int sender_number, int reveiver_number, string file_path);
+    int send(int sender_number, int reveiver_number, string file_path);
     int connect(int system_number, int switch_number, int port_number);
 
     string make_switch_message(int number_of_ports, int switch_number);
-    string make_switch_message(int number_of_ports, int switch_number);
     string make_connect_path(int system_number, int switch_number, int port_number);
     string make_connect_message(string path);
+
 private:
     std::map<int, Pid> switches;
     std::map<int, Pid> systems;

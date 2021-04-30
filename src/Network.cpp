@@ -49,12 +49,14 @@ int Network::add_switch(int number_of_ports, int switch_number) {
 	else if (p > ZERO) {
 		this->switches.insert({switch_number, p});
 		close(fd[READ_END]);
+		return ZERO;
 	}
 	else {
 		close(fd[WRITE_END]);
         string switch_message = make_switch_message(number_of_ports, switch_number);
 		char *args[] = {(Message)SWITCH_DIR, (Message)switch_message.c_str(), NULL};
 		execv(args[ZERO], args);
+		return ZERO;
 	}
 }
 
@@ -75,12 +77,14 @@ int Network::add_system(int system_number) {
 	else if (p > ZERO) {
 		this->systems.insert({system_number, p});
 		close(fd[READ_END]);
+		return ZERO;
 	}
 	else {
 		close(fd[WRITE_END]);
         string system_message = to_string(system_number);
 		char *args[] = {(Message)SYSTEM_DIR, (Message)system_message.c_str(), NULL};
 		execv(args[ZERO], args);
+		return ZERO;
 	}
 }
 
@@ -102,6 +106,7 @@ int Network::connect(int system_number, int switch_number, int port_number) {
     write(fds_system, (Message) message.c_str(), 
     	strlen((Message) message.c_str()) + ONE);
     close(fds_system);
+	return ZERO;
 }
 
 string Network::make_switch_message(int number_of_ports, int switch_number) {
@@ -111,9 +116,10 @@ string Network::make_switch_message(int number_of_ports, int switch_number) {
     return message;
 }
 
-void Network::send(int sender_number, int reveiver_number, string file_path) {
-
+int Network::send(int sender_number, int reveiver_number, string file_path) {
+	return ZERO;
 }
+
 string Network::make_connect_path(int system_number, int switch_number, int port_number) {
 	string path = to_string(system_number) + PATH_SEPARATOR;
 	path += to_string(switch_number) + PATH_SEPARATOR;

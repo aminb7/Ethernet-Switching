@@ -1,29 +1,54 @@
-COMPILER = g++
-COMPILER_FLAGS = --std=c++11
+CC = g++
+BUILD_DIR = build
 SRC_DIR = src
 INCLUDE_DIR = include
-all : Network.out Switch.out System.out
+CFLAGS = -std=c++11 -Wall -Werror -I$(INCLUDE_DIR)
 
-Network.out : Network.o Utils.o
-	${COMPILER} ${COMPILER_FLAGS} Network.o Utils.o -o Network.out
-	
-Network.o :  $(SRC_DIR)/Network.cpp $(INCLUDE_DIR)/Network.h $(INCLUDE_DIR)/Utils.h
-	${COMPILER} ${COMPILER_FLAGS} -c $(SRC_DIR)/Network.cpp -o Network.o
+OBJECTS = \
+	$(BUILD_DIR)/Utils.o \
 
-Switch.out : Switch.o Utils.o
-	${COMPILER} ${COMPILER_FLAGS} Switch.o Utils.o -o Switch.out
+NetworkSensitivityList = \
+	$(SRC_DIR)/Network.cpp \
+	$(INCLUDE_DIR)/Network.h \
 
-Switch.o :  $(SRC_DIR)/Switch.cpp $(INCLUDE_DIR)/Switch.h $(INCLUDE_DIR)/Utils.h
-	${COMPILER} ${COMPILER_FLAGS} -c $(SRC_DIR)/Switch.cpp -o Switch.o
+SwitchSensitivityList = \
+	$(SRC_DIR)/Switch.cpp \
+	$(INCLUDE_DIR)/Switch.h \
 
-System.out : System.o Utils.o
-	${COMPILER} ${COMPILER_FLAGS} System.o Utils.o -o System.out
+SystemSensitivityList = \
+	$(SRC_DIR)/System.cpp \
+	$(INCLUDE_DIR)/System.h \
 
-System.o :  $(SRC_DIR)/System.cpp $(INCLUDE_DIR)/System.h $(INCLUDE_DIR)/Utils.h
-	${COMPILER} ${COMPILER_FLAGS} -c $(SRC_DIR)/System.cpp -o System.o
+UtilsSensitivityList = \
+	$(SRC_DIR)/Utils.cpp \
+	$(INCLUDE_DIR)/Utils.h \
 
-Utils.o :  $(SRC_DIR)/Utils.cpp $(INCLUDE_DIR)/Utils.h
-	${COMPILER} ${COMPILER_FLAGS} -c $(SRC_DIR)/Utils.cpp -o Utils.o
+all: $(BUILD_DIR) Network.out Switch.out System.out
 
-rm:
-	rm -rf *.out 
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+Network.out: $(BUILD_DIR)/Network.o $(OBJECTS)
+	$(CC) $(CFLAGS) -o Network.out $(BUILD_DIR)/Network.o $(OBJECTS)
+
+Switch.out: $(BUILD_DIR)/Switch.o $(OBJECTS)
+	$(CC) $(CFLAGS) -o Switch.out $(BUILD_DIR)/Switch.o $(OBJECTS)
+
+System.out: $(BUILD_DIR)/System.o $(OBJECTS)
+	$(CC) $(CFLAGS) -o System.out $(BUILD_DIR)/System.o $(OBJECTS)
+
+$(BUILD_DIR)/Network.o: $(NetworkSensitivityList)
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/Network.cpp -o $(BUILD_DIR)/Network.o
+
+$(BUILD_DIR)/Switch.o: $(SwitchSensitivityList)
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/Switch.cpp -o $(BUILD_DIR)/Switch.o
+
+$(BUILD_DIR)/System.o: $(SystemSensitivityList)
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/System.cpp -o $(BUILD_DIR)/System.o
+
+$(BUILD_DIR)/Utils.o: $(UtilsSensitivityList)
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/Utils.cpp -o $(BUILD_DIR)/Utils.o
+
+.PHONY: clean
+clean:
+	rm -rf $(BUILD_DIR) *.o *.out
