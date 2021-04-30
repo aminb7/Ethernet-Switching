@@ -17,6 +17,7 @@
 #define ADD_SWITCH_COMMAND "MySwitch"
 #define ADD_SYSTEM_COMMAND "MySystem"
 #define CONNECT_COMMAND "Connect"
+#define SEND_COMMAND "Connect"
 #define QUIT_COMMAND "Quit"
 #define SWITCH_PREFIX "switch"
 #define SYSTEM_PREFIX "system"
@@ -39,8 +40,6 @@
 typedef char* Message;
 typedef pid_t Pid;
 
-using namespace std;
-
 class Network
 {
 public:
@@ -48,7 +47,9 @@ public:
     void handle_command(string command);
     int add_switch(int number_of_ports, int switch_number);
     int add_system(int system_number);
+    void handle_send_command(int sender_number, int reveiver_number, string file_path);
     string make_switch_message(int number_of_ports, int switch_number);
+
 private:
     std::map<int, Pid> switches;
     std::map<int, Pid> systems;

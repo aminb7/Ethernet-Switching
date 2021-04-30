@@ -1,14 +1,16 @@
 #include "../include/Network.h"
 
+using namespace std;
+
 int main(int argc, char const *argv[]) {
 	string command;
+	Network network;
 	while(true) {
 		getline(cin, command);
 		if (command == QUIT_COMMAND) {
 			break;
 		}
 
-		Network network;
 		network.handle_command(command);
 	}
 	return ZERO;
@@ -22,6 +24,9 @@ void Network::handle_command(string command) {
 
     else if (command_parts[COMMAND] == ADD_SYSTEM_COMMAND)
         add_system(stoi(command_parts[ARG1]));
+
+	else if (command_parts[COMMAND] == SEND_COMMAND)
+		handle_send_command(stoi(command_parts[ARG1]), stoi(command_parts[ARG2]), command_parts[ARG1]);
 }
 
 int Network::add_switch(int number_of_ports, int switch_number) {
@@ -88,4 +93,8 @@ string Network::make_switch_message(int number_of_ports, int switch_number) {
     message += PROPS_SEPARATOR;
     message += to_string(number_of_ports);
     return message;
+}
+
+void Network::handle_send_command(int sender_number, int reveiver_number, string file_path) {
+
 }

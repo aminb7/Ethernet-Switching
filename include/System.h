@@ -14,14 +14,13 @@
 #define MAX_LINE 2048
 #define DATA 1
 
-using namespace std;
-
 class System {
 public:
     System() {}
     ~System();
     void set_props(string data);
     int get_id() {return id;}
+
 private:
     int id;
     string path_name;

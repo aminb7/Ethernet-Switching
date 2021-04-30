@@ -1,5 +1,7 @@
 #include "../include/Switch.h"
 
+using namespace std;
+
 int main(int argc, char const *argv[]) {
 	Switch my_switch;
 	my_switch.set_props(argv[DATA]);

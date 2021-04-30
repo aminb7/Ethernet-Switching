@@ -20,15 +20,14 @@
 #define NUMBER_OF_PORTS 1
 #define DATA 1
 
-using namespace std;
-
 class Switch {
-    public:
+public:
     Switch() {}
     ~Switch();
     void set_props(string data);
     int get_id() {return id;}
     string get_path() {return path_name;}
+
 private:
     int id;
     int number_of_ports;

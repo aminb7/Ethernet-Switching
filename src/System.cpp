@@ -1,5 +1,7 @@
 #include "../include/System.h"
 
+using namespace std;
+
 int main(int argc, char const *argv[]) {
 	System system;
 	system.set_props(argv[DATA]);
