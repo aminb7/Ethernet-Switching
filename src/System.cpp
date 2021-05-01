@@ -20,15 +20,13 @@ void System::start(const char* args) {
     fd_set fds;
     int maxfd, activity;
     while (true) {
-        cout << "before open\n";
-        int network_pipe_fd = open(this->network_pipe_path.c_str(), O_RDONLY);
+        int network_pipe_fd = open(this->network_pipe_path.c_str(), O_NONBLOCK);
         maxfd = network_pipe_fd;
-        cout << "after open\n";
         FD_ZERO(&fds);
         FD_SET(network_pipe_fd, &fds);
         int connection_pipe_fd;
         if (connection_pipe_path != "") {
-            connection_pipe_fd = open(this->connection_pipe_path.c_str(), O_RDONLY);
+            connection_pipe_fd = open(this->connection_pipe_path.c_str(), O_NONBLOCK);
             maxfd = connection_pipe_fd > network_pipe_fd ? connection_pipe_fd : network_pipe_fd;
             FD_SET(connection_pipe_fd, &fds);
         }
@@ -39,12 +37,11 @@ void System::start(const char* args) {
 
         memset(received_message, 0, sizeof received_message);
         read(network_pipe_fd, received_message, MAX_LINE);
-
         if (FD_ISSET(network_pipe_fd, &fds))
             handle_network_command(received_message);
 
         else if (connection_pipe_path != "" && FD_ISSET(connection_pipe_fd, &fds))
-            ; //handle other commands
+            handle_ethernet_message(received_message);
 
         if (connection_pipe_path != "")
             close(connection_pipe_fd);
@@ -66,4 +63,8 @@ void System::handle_network_command(char* message) {
 
 void System::connect(string path) {
     this->connection_pipe_path = path;
+}
+
+void System::handle_ethernet_message(char* message) {
+    
 }

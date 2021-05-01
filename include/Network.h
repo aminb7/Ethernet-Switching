@@ -1,3 +1,6 @@
+#ifndef NETWORK_H
+#define NETWORK_H
+
 #define SWITCH_DIR "Switch.out"
 #define SYSTEM_DIR "System.out"
 
@@ -61,3 +64,5 @@ private:
     std::map<int, Pid> switches;
     std::map<int, Pid> systems;
 };
+
+#endif

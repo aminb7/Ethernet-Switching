@@ -93,13 +93,11 @@ int Network::connect(int system_number, int switch_number, int port_number) {
     string message = make_connect_message(path);
 
 	int fds_switch = open(switch_path.c_str(), O_WRONLY);
-    write(fds_switch, (Message) message.c_str(), 
-    	strlen((Message) message.c_str()) + ONE);
+    write(fds_switch, (Message) message.c_str(), strlen((Message) message.c_str()) + ONE);
     close(fds_switch);
 
 	int fds_system = open(system_path.c_str(), O_WRONLY);
-    write(fds_system, (Message) message.c_str(), 
-    	strlen((Message) message.c_str()) + ONE);
+    write(fds_system, (Message) message.c_str(), strlen((Message) message.c_str()) + ONE);
     close(fds_system);
 	return ZERO;
 }

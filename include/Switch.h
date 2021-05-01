@@ -31,12 +31,13 @@
 
 class Switch {
 public:
-    Switch() {}
-    ~Switch();
+    Switch() = default;
+    ~Switch() = default;
     void start(const char* args);
     void set_props(std::string data);
     void handle_network_command(char* message);
     void connect(std::string path);
+    void handle_ethernet_message(char* message);
     int get_id() {return id;}
     std::string get_path() {return network_pipe_path;}
 
@@ -47,9 +48,5 @@ private:
     std::map<std::string, std::string> lookup;
     std::map<int, std::string> connection_pipe_paths;
 };
-
-Switch::~Switch()
-{
-}
 
 #endif

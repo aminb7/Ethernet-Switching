@@ -16,7 +16,7 @@ void Switch::start(const char* args) {
     fd_set fds;
     int maxfd, activity;
     while (true) {
-        int network_pipe_fd = open(this->network_pipe_path.c_str(), O_RDONLY);
+        int network_pipe_fd = open(this->network_pipe_path.c_str(), O_NONBLOCK);
         maxfd = network_pipe_fd;
 
         FD_ZERO(&fds);
@@ -26,7 +26,7 @@ void Switch::start(const char* args) {
         vector<int> connection_pipe_fds;
         for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++)
         {
-            int connection_pipe_fd = open(it->second.c_str(), O_RDONLY);
+            int connection_pipe_fd = open(it->second.c_str(), O_NONBLOCK);
             connection_pipe_fds.push_back(connection_pipe_fd);
             maxfd = connection_pipe_fd > maxfd ? connection_pipe_fd : maxfd;
             FD_SET(connection_pipe_fd, &fds);
@@ -42,7 +42,7 @@ void Switch::start(const char* args) {
         if (FD_ISSET(network_pipe_fd, &fds))
             handle_network_command(received_message);
         else
-        ; //handle other commands
+            handle_ethernet_message(received_message);
 
         for (int connection_pipe_fd : connection_pipe_fds) {
             close(connection_pipe_fd);
@@ -73,4 +73,8 @@ void Switch::connect(string path) {
     for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++)
     {
     }
+}
+
+void Switch::handle_ethernet_message(char* message) {
+    
 }

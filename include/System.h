@@ -24,21 +24,20 @@
 class System {
 public:
     System();
-    ~System();
+    ~System() = default;
+
     void start(const char* args);
     void set_props(std::string data);
     void handle_network_command(char* message);
     void connect(std::string path);
+    void handle_ethernet_message(char* message);
     int get_id() {return id;}
 
 private:
     int id;
     std::string network_pipe_path;
     std::string connection_pipe_path;
+    std::vector<std::string> message_queue;
 };
-
-System::~System()
-{
-}
 
 #endif
