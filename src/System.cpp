@@ -46,6 +46,7 @@ void System::start(const char* args) {
         if (connection_pipe_path != "")
             close(connection_pipe_fd);
         close(network_pipe_fd);
+        cout << "---------------------------- System ----------------------------\n";
     }
 }
 
@@ -59,12 +60,26 @@ void System::handle_network_command(char* message) {
 
     if (info[COMMAND] == CONNECT_COMMAND) 
         connect(info[ARG1]);
+
+    if (info[COMMAND] == SEND_COMMAND) 
+        network_send(info[ARG1]);
 }
 
 void System::connect(string path) {
     this->connection_pipe_path = path;
 }
 
+void System::network_send(string ethernet_message) {
+    cout << "sending ethernet message: " << ethernet_message << endl;
+    if (connection_pipe_path != "") {
+        int connection_pipe_fd = open(this->connection_pipe_path.c_str(), O_WRONLY);
+        write(connection_pipe_fd, ethernet_message.c_str(), ethernet_message.size() + ONE);
+        close(connection_pipe_fd);
+    }
+}
+
 void System::handle_ethernet_message(char* message) {
-    
+    vector<string> info = split(message, ETHERNET_SEPERATOR);
+    if (stoi(info[DST_ADDR_IDX]) == id)
+        message_queue.push_back(info[CONTENT_IDX]);
 }

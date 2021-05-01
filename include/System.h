@@ -11,6 +11,7 @@
 #include <iostream>
 
 #include "Utils.h"
+#include "EthernetFrame.h"
 
 #define PATH_PREFIX "system"
 #define ZERO 0
@@ -18,8 +19,10 @@
 #define DATA 1
 #define COMMAND_SEPARATOR '@'
 #define CONNECT_COMMAND "Connect"
+#define SEND_COMMAND "Send"
 #define COMMAND 0
 #define ARG1 1
+#define ONE 1
 
 class System {
 public:
@@ -30,6 +33,7 @@ public:
     void set_props(std::string data);
     void handle_network_command(char* message);
     void connect(std::string path);
+    void network_send(std::string ethernet_message);
     void handle_ethernet_message(char* message);
     int get_id() {return id;}
 

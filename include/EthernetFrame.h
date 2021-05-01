@@ -7,7 +7,7 @@
 #include "Utils.h"
 
 #define SPACE ' '
-#define ETHERNET_SEPERATOR "%"
+#define ETHERNET_SEPERATOR '%'
 #define SRC_ADDR_IDX 0
 #define DST_ADDR_IDX 1
 #define CONTENT_IDX 2

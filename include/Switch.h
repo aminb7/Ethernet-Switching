@@ -12,6 +12,7 @@
 #include <map>
 
 #include "Utils.h"
+#include "EthernetFrame.h"
 
 #define PATH_PREFIX "switch"
 #define CONNECT_PATH_PREFIX "connect"
@@ -28,6 +29,7 @@
 #define ID 0
 #define NUMBER_OF_PORTS 1
 #define DATA 1
+#define ONE 1
 
 class Switch {
 public:
@@ -37,7 +39,7 @@ public:
     void set_props(std::string data);
     void handle_network_command(char* message);
     void connect(std::string path);
-    void handle_ethernet_message(char* message);
+    void handle_ethernet_message(char* message, int port);
     int get_id() {return id;}
     std::string get_path() {return network_pipe_path;}
 
@@ -45,7 +47,7 @@ private:
     int id;
     int number_of_ports;
     std::string network_pipe_path;
-    std::map<std::string, std::string> lookup;
+    std::map<std::string, int> lookup;
     std::map<int, std::string> connection_pipe_paths;
 };
 

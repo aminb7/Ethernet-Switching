@@ -16,11 +16,12 @@
 #include <fcntl.h> 
 
 #include "Utils.h"
+#include "EthernetFrame.h"
 
 #define ADD_SWITCH_COMMAND "MySwitch"
 #define ADD_SYSTEM_COMMAND "MySystem"
 #define CONNECT_COMMAND "Connect"
-#define SEND_COMMAND "Connect"
+#define SEND_COMMAND "Send"
 #define QUIT_COMMAND "Quit"
 #define SWITCH_PREFIX "switch"
 #define SYSTEM_PREFIX "system"
@@ -42,6 +43,7 @@
 #define ZERO 0
 #define ONE 1
 #define TWO 2
+#define MAX_FILE_PARTITION_SIZE 8192
 
 typedef char* Message;
 typedef pid_t Pid;
@@ -57,8 +59,9 @@ public:
     int connect(int system_number, int switch_number, int port_number);
 
     std::string make_switch_message(int number_of_ports, int switch_number);
-    std::string make_connect_path(int system_number, int switch_number, int port_number);
+    std::string make_connect_pipe_path(int system_number, int switch_number, int port_number);
     std::string make_connect_message(std::string path);
+    std::vector<std::string> partition_content(std::string content, int partition_size);
 
 private:
     std::map<int, Pid> switches;

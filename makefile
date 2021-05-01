@@ -6,6 +6,7 @@ CFLAGS = -std=c++11 -Wall -Werror -I$(INCLUDE_DIR)
 
 OBJECTS = \
 	$(BUILD_DIR)/Utils.o \
+	$(BUILD_DIR)/EthernetFrame.o \
 
 NetworkSensitivityList = \
 	$(SRC_DIR)/Network.cpp \
@@ -22,6 +23,10 @@ SystemSensitivityList = \
 UtilsSensitivityList = \
 	$(SRC_DIR)/Utils.cpp \
 	$(INCLUDE_DIR)/Utils.h \
+
+EthernetFrameSensitivityList = \
+	$(SRC_DIR)/EthernetFrame.cpp \
+	$(INCLUDE_DIR)/EthernetFrame.h \
 
 all: $(BUILD_DIR) Network.out Switch.out System.out
 
@@ -48,6 +53,9 @@ $(BUILD_DIR)/System.o: $(SystemSensitivityList)
 
 $(BUILD_DIR)/Utils.o: $(UtilsSensitivityList)
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/Utils.cpp -o $(BUILD_DIR)/Utils.o
+
+$(BUILD_DIR)/EthernetFrame.o: $(EthernetFrameSensitivityList)
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/EthernetFrame.cpp -o $(BUILD_DIR)/EthernetFrame.o
 
 .PHONY: clean
 clean:
