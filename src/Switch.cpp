@@ -98,6 +98,8 @@ void Switch::handle_ethernet_message(char* message, int port) {
     else {
         map<int, pair<string, string>>::iterator it;
         for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++) {
+            if (connection_pipe_paths[port].second == it->second.second)
+                continue;
             int connection_pipe_fd = open(it->second.second.c_str(), O_WRONLY);
             write(connection_pipe_fd, message, strlen(message) + ONE);
             close(connection_pipe_fd);
