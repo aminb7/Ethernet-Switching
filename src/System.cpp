@@ -86,5 +86,5 @@ void System::network_send(string ethernet_message) {
 void System::handle_ethernet_message(char* message) {
     vector<string> info = split(message, ETHERNET_SEPERATOR);
     if (stoi(info[DST_ADDR_IDX]) == id)
-        message_queue.push_back(info[CONTENT_IDX]);
+        message_queue.push_back(EthernetFrame::decode(message));
 }

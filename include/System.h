@@ -43,7 +43,7 @@ private:
     int id;
     std::string network_pipe_path;
     std::pair<std::string, std::string> connection_pipe_path;
-    std::vector<std::string> message_queue;
+    std::vector<EthernetFrame> message_queue;
 };
 
 #endif
