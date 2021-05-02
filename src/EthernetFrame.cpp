@@ -20,3 +20,11 @@ std::string EthernetFrame::encode(const EthernetFrame ethernet_frame) {
             + ETHERNET_SEPERATOR
             + ethernet_frame.content;
 }
+
+std::string EthernetFrame::getContent() {
+    return content;
+}
+
+int EthernetFrame::getSourceAddress() {
+    return src_address;
+}

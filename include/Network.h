@@ -22,6 +22,7 @@
 #define ADD_SYSTEM_COMMAND "MySystem"
 #define CONNECT_COMMAND "Connect"
 #define SEND_COMMAND "Send"
+#define RECEIVE_COMMAND "Receive"
 #define QUIT_COMMAND "Quit"
 #define SWITCH_PREFIX "switch"
 #define SYSTEM_PREFIX "system"
@@ -55,7 +56,8 @@ public:
     void handle_command(std::string command);
     int add_switch(int number_of_ports, int switch_number);
     int add_system(int system_number);
-    int send(int sender_number, int reveiver_number, std::string file_path);
+    int send(int sender_number, int receiver_number, std::string file_path);
+    int receive(int system_number);
     int connect(int system_number, int switch_number, int port_number);
 
     std::string make_switch_message(int number_of_ports, int switch_number);

@@ -69,6 +69,9 @@ void System::handle_network_command(char* message) {
 
     if (info[COMMAND] == SEND_COMMAND) 
         network_send(info[ARG1]);
+
+    if (info[COMMAND] == RECEIVE_COMMAND)
+        network_receive();
 }
 
 void System::connect(string read_path, string write_path) {
@@ -83,8 +86,21 @@ void System::network_send(string ethernet_message) {
     }
 }
 
+void System::network_receive() {
+    if (!message_queue.empty()) {
+        EthernetFrame frame = message_queue.front();
+        cout << "Source Address: " << frame.getContent() << NEW_LINE;
+        cout << "Content: " << frame.getContent() << NEW_LINE;
+        message_queue.pop();
+    }
+    else {
+        cout << "No messeage has been received yet!" << NEW_LINE;
+    }
+    cout << "> ";
+}
+
 void System::handle_ethernet_message(char* message) {
     vector<string> info = split(message, ETHERNET_SEPERATOR);
     if (stoi(info[DST_ADDR_IDX]) == id)
-        message_queue.push_back(EthernetFrame::decode(message));
+        message_queue.push(EthernetFrame::decode(message));
 }
