@@ -9,7 +9,7 @@ EthernetFrame::EthernetFrame(int src_address, int dst_address, string content)
 }
 
 EthernetFrame EthernetFrame::decode(const std::string ethernet_message) {
-    vector<string> frame_parts = split(ethernet_message, SPACE);
+    vector<string> frame_parts = split(ethernet_message, ETHERNET_SEPERATOR);
     return EthernetFrame(stoi(frame_parts[SRC_ADDR_IDX]), stoi(frame_parts[DST_ADDR_IDX]), frame_parts[CONTENT_IDX]);
 }
 
