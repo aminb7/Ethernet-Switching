@@ -9,6 +9,7 @@
 #include <string>
 #include <string.h>
 #include <iostream>
+#include <utility>
 
 #include "Utils.h"
 #include "EthernetFrame.h"
@@ -22,6 +23,7 @@
 #define SEND_COMMAND "Send"
 #define COMMAND 0
 #define ARG1 1
+#define ARG2 2
 #define ONE 1
 
 class System {
@@ -32,7 +34,7 @@ public:
     void start(const char* args);
     void set_props(std::string data);
     void handle_network_command(char* message);
-    void connect(std::string path);
+    void connect(std::string read_path, std::string write_path);
     void network_send(std::string ethernet_message);
     void handle_ethernet_message(char* message);
     int get_id() {return id;}
@@ -40,7 +42,7 @@ public:
 private:
     int id;
     std::string network_pipe_path;
-    std::string connection_pipe_path;
+    std::pair<std::string, std::string> connection_pipe_path;
     std::vector<std::string> message_queue;
 };
 

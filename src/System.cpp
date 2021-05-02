@@ -1,4 +1,5 @@
 #include "../include/System.h"
+#include <errno.h>
 
 using namespace std;
 
@@ -10,7 +11,7 @@ int main(int argc, char const *argv[]) {
 
 System::System()
 : network_pipe_path("")
-, connection_pipe_path("") {
+, connection_pipe_path("", "") {
 }
 
 void System::start(const char* args) {
@@ -25,8 +26,8 @@ void System::start(const char* args) {
         FD_ZERO(&fds);
         FD_SET(network_pipe_fd, &fds);
         int connection_pipe_fd;
-        if (connection_pipe_path != "") {
-            connection_pipe_fd = open(this->connection_pipe_path.c_str(), O_NONBLOCK);
+        if (connection_pipe_path.first != "") {
+            connection_pipe_fd = open(this->connection_pipe_path.first.c_str(), O_NONBLOCK);
             maxfd = connection_pipe_fd > network_pipe_fd ? connection_pipe_fd : network_pipe_fd;
             FD_SET(connection_pipe_fd, &fds);
         }
@@ -36,17 +37,22 @@ void System::start(const char* args) {
             return;
 
         memset(received_message, 0, sizeof received_message);
-        read(network_pipe_fd, received_message, MAX_LINE);
-        if (FD_ISSET(network_pipe_fd, &fds))
+
+        if (FD_ISSET(network_pipe_fd, &fds)) {
+            if (connection_pipe_path.first != "")
+                close(connection_pipe_fd);
+            read(network_pipe_fd, received_message, MAX_LINE);
             handle_network_command(received_message);
+        }
 
-        else if (connection_pipe_path != "" && FD_ISSET(connection_pipe_fd, &fds))
+        else if (FD_ISSET(connection_pipe_fd, &fds)) {
+            read(connection_pipe_fd, received_message, MAX_LINE);
+            if (connection_pipe_path.first != "")
+                close(connection_pipe_fd);
             handle_ethernet_message(received_message);
+        }
 
-        if (connection_pipe_path != "")
-            close(connection_pipe_fd);
         close(network_pipe_fd);
-        cout << "---------------------------- System ----------------------------\n";
     }
 }
 
@@ -59,20 +65,19 @@ void System::handle_network_command(char* message) {
     vector<string> info = split(message, COMMAND_SEPARATOR);
 
     if (info[COMMAND] == CONNECT_COMMAND) 
-        connect(info[ARG1]);
+        connect(info[ARG1], info[ARG2]);
 
     if (info[COMMAND] == SEND_COMMAND) 
         network_send(info[ARG1]);
 }
 
-void System::connect(string path) {
-    this->connection_pipe_path = path;
+void System::connect(string read_path, string write_path) {
+    this->connection_pipe_path = make_pair(read_path, write_path);
 }
 
 void System::network_send(string ethernet_message) {
-    cout << "sending ethernet message: " << ethernet_message << endl;
-    if (connection_pipe_path != "") {
-        int connection_pipe_fd = open(this->connection_pipe_path.c_str(), O_WRONLY);
+    if (connection_pipe_path.second != "") {
+        int connection_pipe_fd = open(this->connection_pipe_path.second.c_str(), O_WRONLY);
         write(connection_pipe_fd, ethernet_message.c_str(), ethernet_message.size() + ONE);
         close(connection_pipe_fd);
     }

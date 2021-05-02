@@ -10,6 +10,7 @@
 #include <string.h>
 #include <iostream>
 #include <map>
+#include <utility>
 
 #include "Utils.h"
 #include "EthernetFrame.h"
@@ -23,7 +24,7 @@
 #define PATH_SEPARATOR '_'
 #define CONNECT_COMMAND "Connect"
 #define COMMAND 0
-#define PORT_NUMBER 2
+#define PORT_NUMBER 3
 #define ARG1 1
 #define ARG2 2
 #define ID 0
@@ -38,7 +39,7 @@ public:
     void start(const char* args);
     void set_props(std::string data);
     void handle_network_command(char* message);
-    void connect(std::string path);
+    void connect(std::string read_path, std::string write_path);
     void handle_ethernet_message(char* message, int port);
     int get_id() {return id;}
     std::string get_path() {return network_pipe_path;}
@@ -48,7 +49,7 @@ private:
     int number_of_ports;
     std::string network_pipe_path;
     std::map<std::string, int> lookup;
-    std::map<int, std::string> connection_pipe_paths;
+    std::map<int, std::pair<std::string, std::string>> connection_pipe_paths;
 };
 
 #endif

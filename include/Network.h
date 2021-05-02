@@ -60,7 +60,7 @@ public:
 
     std::string make_switch_message(int number_of_ports, int switch_number);
     std::string make_connect_pipe_path(int system_number, int switch_number, int port_number);
-    std::string make_connect_message(std::string path);
+    std::string make_connect_message(std::string switch_connection_pipe_path, std::string system_connection_pipe_path);
     std::vector<std::string> partition_content(std::string content, int partition_size);
 
 private:
