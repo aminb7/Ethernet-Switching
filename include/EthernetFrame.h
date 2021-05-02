@@ -19,6 +19,8 @@ public:
 
     static EthernetFrame decode(const std::string ethernet_message);
     static std::string encode(const EthernetFrame ethernet_frame);
+    std::string getContent();
+    int getSourceAddress();
 
 private:
     int src_address;

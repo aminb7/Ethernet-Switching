@@ -31,6 +31,12 @@ void Network::handle_command(string command) {
 
 	else if (command_parts[COMMAND] == SEND_COMMAND)
 		send(stoi(command_parts[ARG1]), stoi(command_parts[ARG2]), command_parts[ARG3]);
+
+	else if (command_parts[COMMAND] == RECEIVE_COMMAND)
+		receive(stoi(command_parts[ARG1]));
+
+	else 
+		cout << "Invalid command!" << NEW_LINE;
 }
 
 int Network::add_switch(int number_of_ports, int switch_number) {
@@ -130,7 +136,7 @@ string Network::make_connect_message(string switch_connection_pipe_path, string 
     return message;
 }
 
-int Network::send(int sender_number, int reveiver_number, string file_path) {
+int Network::send(int sender_number, int receiver_number, string file_path) {
 	string content = read_file_to_string(file_path);
 	vector<string> partitions = partition_content(content, MAX_FILE_PARTITION_SIZE);
 
@@ -139,9 +145,21 @@ int Network::send(int sender_number, int reveiver_number, string file_path) {
 	for (string partition : partitions) {
 		string message = string(SEND_COMMAND)
 				+ string(COMMAND_SEPARATOR)
-				+ EthernetFrame::encode(EthernetFrame(sender_number, reveiver_number, partition));
+				+ EthernetFrame::encode(EthernetFrame(sender_number, receiver_number, partition));
 		write(fds_system, (Message) message.c_str(), message.size() + ONE);
 	}
+
+	close(fds_system);
+	return ZERO;
+}
+
+int Network::receive(int system_number) {
+
+	string system_pipe_path = SYSTEM_PREFIX + to_string(system_number);
+	int fds_system = open(system_pipe_path.c_str(), O_WRONLY);
+
+	string message = RECEIVE_COMMAND;
+	write(fds_system, (Message) message.c_str(), message.size() + ONE);
 
 	close(fds_system);
 	return ZERO;
