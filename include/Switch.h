@@ -23,6 +23,7 @@
 #define COMMAND_SEPARATOR '@'
 #define PATH_SEPARATOR '_'
 #define CONNECT_COMMAND "Connect"
+#define CONNECT_SWITCH_COMMAND "ConnectSwitch"
 #define COMMAND 0
 #define PORT_NUMBER 3
 #define ARG1 1

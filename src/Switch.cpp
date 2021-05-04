@@ -74,7 +74,7 @@ void Switch::set_props(string data) {
 void Switch::handle_network_command(char* message) {
     vector<string> info = split(message, COMMAND_SEPARATOR);
 
-    if (info[COMMAND] == CONNECT_COMMAND) 
+    if (info[COMMAND] == CONNECT_COMMAND || info[COMMAND] == CONNECT_SWITCH_COMMAND) 
         connect(info[ARG2], info[ARG1]);
 }
 

@@ -29,6 +29,9 @@ void Network::handle_command(string command) {
 	else if (command_parts[COMMAND] == CONNECT_COMMAND)
 		connect(stoi(command_parts[ARG1]), stoi(command_parts[ARG2]), stoi(command_parts[ARG3]));
 
+	else if (command_parts[COMMAND] == CONNECT_SWITCH_COMMAND)
+		connect_switch(stoi(command_parts[ARG1]), stoi(command_parts[ARG2]), stoi(command_parts[ARG3]), stoi(command_parts[ARG4]));
+
 	else if (command_parts[COMMAND] == SEND_COMMAND)
 		send(stoi(command_parts[ARG1]), stoi(command_parts[ARG2]), command_parts[ARG3]);
 
@@ -113,6 +116,33 @@ int Network::connect(int system_number, int switch_number, int port_number) {
 	return ZERO;
 }
 
+int Network::connect_switch(int switch1_number, int switch2_number, int port1_number, int port2_number) {
+	string path = make_connect_switch_path(switch1_number, switch2_number, port1_number, port2_number);
+	string switch1_connection_pipe_path = SWITCH_PREFIX + to_string(1) + string(PATH_SEPARATOR)
+			+ make_connect_switch_path(switch1_number, switch2_number, port1_number, port2_number);
+	string switch2_connection_pipe_path = SWITCH_PREFIX + to_string(2) + string(PATH_SEPARATOR)
+			+ make_connect_switch_path(switch2_number, switch1_number, port2_number, port1_number);
+
+    unlink(switch1_connection_pipe_path.c_str());
+	mkfifo(switch1_connection_pipe_path.c_str(), READ_WRITE);
+	unlink(switch2_connection_pipe_path.c_str());
+	mkfifo(switch2_connection_pipe_path.c_str(), READ_WRITE);
+    string switch1_pipe_path = SWITCH_PREFIX + to_string(switch1_number);
+	string switch2_pipe_path = SWITCH_PREFIX + to_string(switch2_number);
+
+    string message1 = make_connect_message(switch1_connection_pipe_path, switch2_connection_pipe_path);
+	string message2 = make_connect_message(switch2_connection_pipe_path, switch1_connection_pipe_path);
+
+	int fd_switch1 = open(switch1_pipe_path.c_str(), O_WRONLY);
+    write(fd_switch1, (Message) message1.c_str(), strlen((Message) message1.c_str()) + ONE);
+    close(fd_switch1);
+
+	int fd_switch2 = open(switch2_pipe_path.c_str(), O_WRONLY);
+    write(fd_switch2, (Message) message2.c_str(), strlen((Message) message2.c_str()) + ONE);
+    close(fd_switch2);
+	return ZERO;
+}
+
 string Network::make_switch_message(int number_of_ports, int switch_number) {
     string message = to_string(switch_number);
     message += PROPS_SEPARATOR;
@@ -134,6 +164,14 @@ string Network::make_connect_message(string switch_connection_pipe_path, string 
 	message += COMMAND_SEPARATOR;
 	message += switch_connection_pipe_path;
     return message;
+}
+
+string Network::make_connect_switch_path(int switch1_number, int switch2_number, int port1_number, int port2_number) {
+    string path = to_string(switch1_number) + PATH_SEPARATOR;
+	path += to_string(switch2_number) + PATH_SEPARATOR;
+	path += to_string(port1_number) + PATH_SEPARATOR;
+	path += to_string(port2_number);
+    return path;
 }
 
 int Network::send(int sender_number, int receiver_number, string file_path) {

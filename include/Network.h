@@ -21,6 +21,7 @@
 #define ADD_SWITCH_COMMAND "MySwitch"
 #define ADD_SYSTEM_COMMAND "MySystem"
 #define CONNECT_COMMAND "Connect"
+#define CONNECT_SWITCH_COMMAND "ConnectSwitch"
 #define SEND_COMMAND "Send"
 #define RECEIVE_COMMAND "Receive"
 #define QUIT_COMMAND "Quit"
@@ -41,6 +42,7 @@
 #define ARG1 1
 #define ARG2 2
 #define ARG3 3
+#define ARG4 4
 #define ZERO 0
 #define ONE 1
 #define TWO 2
@@ -59,10 +61,12 @@ public:
     int send(int sender_number, int receiver_number, std::string file_path);
     int receive(int system_number);
     int connect(int system_number, int switch_number, int port_number);
+    int connect_switch(int switch1_number, int switch2_number, int port1_number, int port2_number);
 
     std::string make_switch_message(int number_of_ports, int switch_number);
     std::string make_connect_pipe_path(int system_number, int switch_number, int port_number);
     std::string make_connect_message(std::string switch_connection_pipe_path, std::string system_connection_pipe_path);
+    std::string make_connect_switch_path(int switch1_number, int switch2_number, int port1_number, int port2_number);
     std::vector<std::string> partition_content(std::string content, int partition_size);
 
 private:
