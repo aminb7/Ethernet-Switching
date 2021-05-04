@@ -1,0 +1,19 @@
+MySwitch 6 1
+MySwitch 6 2
+MySwitch 6 3
+MySwitch 6 4
+MySwitch 6 5
+MySwitch 6 6
+ConnectSwitch 1 2 1 1
+ConnectSwitch 2 3 2 1
+ConnectSwitch 3 4 2 1
+ConnectSwitch 4 5 2 1
+ConnectSwitch 5 6 2 1
+MySystem 1
+MySystem 2
+MySystem 3
+MySystem 4
+Connect 1 1 4
+Connect 2 3 4
+Connect 3 4 4
+Connect 4 6 4

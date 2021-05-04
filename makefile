@@ -59,4 +59,4 @@ $(BUILD_DIR)/EthernetFrame.o: $(EthernetFrameSensitivityList)
 
 .PHONY: clean
 clean:
-	rm -rf $(BUILD_DIR) *.o *.out
+	rm -rf $(BUILD_DIR) *.o *.out switch* system*
