@@ -21,18 +21,19 @@ void System::start(const char* args) {
     fd_set fds;
     int maxfd, activity;
     while (true) {
-        int network_pipe_fd = open(this->network_pipe_path.c_str(), O_NONBLOCK);
+        int network_pipe_fd = open(this->network_pipe_path.c_str(), O_RDWR);
         maxfd = network_pipe_fd;
         FD_ZERO(&fds);
         FD_SET(network_pipe_fd, &fds);
         int connection_pipe_fd;
         if (connection_pipe_path.first != "") {
-            connection_pipe_fd = open(this->connection_pipe_path.first.c_str(), O_NONBLOCK);
+            connection_pipe_fd = open(this->connection_pipe_path.first.c_str(), O_RDWR);
             maxfd = connection_pipe_fd > network_pipe_fd ? connection_pipe_fd : network_pipe_fd;
             FD_SET(connection_pipe_fd, &fds);
         }
-
+        // cout << "----------id: " << id << "  waiting for message -----------------\n";
         activity = select(maxfd + 1, &fds, NULL, NULL, NULL);
+        // cout << "-------------id: " << id << "------------------------------------------\n";
         if (activity < 0)
             return;
 
@@ -80,7 +81,7 @@ void System::connect(string read_path, string write_path) {
 
 void System::network_send(string ethernet_message) {
     if (connection_pipe_path.second != "") {
-        int connection_pipe_fd = open(this->connection_pipe_path.second.c_str(), O_WRONLY);
+        int connection_pipe_fd = open(this->connection_pipe_path.second.c_str(), O_RDWR);
         write(connection_pipe_fd, ethernet_message.c_str(), ethernet_message.size() + ONE);
         close(connection_pipe_fd);
     }
@@ -89,7 +90,7 @@ void System::network_send(string ethernet_message) {
 void System::network_receive() {
     if (!message_queue.empty()) {
         EthernetFrame frame = message_queue.front();
-        cout << "Source Address: " << frame.getContent() << NEW_LINE;
+        cout << "Source Address: " << frame.getSourceAddress() << NEW_LINE;
         cout << "Content: " << frame.getContent() << NEW_LINE;
         message_queue.pop();
     }

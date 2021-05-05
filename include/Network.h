@@ -46,7 +46,7 @@
 #define ZERO 0
 #define ONE 1
 #define TWO 2
-#define MAX_FILE_PARTITION_SIZE 8192
+#define MAX_FILE_PARTITION_SIZE 10
 
 typedef char* Message;
 typedef pid_t Pid;

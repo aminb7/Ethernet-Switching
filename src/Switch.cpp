@@ -16,7 +16,7 @@ void Switch::start(const char* args) {
     fd_set fds;
     int maxfd, activity;
     while (true) {
-        int network_pipe_fd = open(this->network_pipe_path.c_str(), O_NONBLOCK);
+        int network_pipe_fd = open(this->network_pipe_path.c_str(), O_RDWR);
         maxfd = network_pipe_fd;
 
         FD_ZERO(&fds);
@@ -27,7 +27,7 @@ void Switch::start(const char* args) {
         map<int, pair<string, string>>::iterator it;
         for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++)
         {
-            int connection_pipe_fd = open(it->second.first.c_str(), O_NONBLOCK);
+            int connection_pipe_fd = open(it->second.first.c_str(), O_RDWR);
             connection_pipe_fds.push_back(connection_pipe_fd);
             connection_ports.push_back(it->first);
             maxfd = connection_pipe_fd > maxfd ? connection_pipe_fd : maxfd;
@@ -91,7 +91,7 @@ void Switch::handle_ethernet_message(char* message, int port) {
 
     if (lookup.find(info[DST_ADDR_IDX]) != lookup.end()) {
         int port = lookup[info[DST_ADDR_IDX]];
-        int connection_pipe_fd = open(connection_pipe_paths[port].second.c_str(), O_WRONLY);
+        int connection_pipe_fd = open(connection_pipe_paths[port].second.c_str(), O_RDWR);
         write(connection_pipe_fd, message, strlen(message) + ONE);
         close(connection_pipe_fd);
     }
@@ -100,7 +100,7 @@ void Switch::handle_ethernet_message(char* message, int port) {
         for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++) {
             if (connection_pipe_paths[port].second == it->second.second)
                 continue;
-            int connection_pipe_fd = open(it->second.second.c_str(), O_WRONLY);
+            int connection_pipe_fd = open(it->second.second.c_str(), O_RDWR);
             write(connection_pipe_fd, message, strlen(message) + ONE);
             close(connection_pipe_fd);
         }

@@ -106,11 +106,11 @@ int Network::connect(int system_number, int switch_number, int port_number) {
 
     string message = make_connect_message(switch_connection_pipe_path, system_connection_pipe_path);
 
-	int fds_switch = open(switch_pipe_path.c_str(), O_WRONLY);
+	int fds_switch = open(switch_pipe_path.c_str(), O_RDWR);
     write(fds_switch, (Message) message.c_str(), strlen((Message) message.c_str()) + ONE);
     close(fds_switch);
 
-	int fds_system = open(system_pipe_path.c_str(), O_WRONLY);
+	int fds_system = open(system_pipe_path.c_str(), O_RDWR);
     write(fds_system, (Message) message.c_str(), strlen((Message) message.c_str()) + ONE);
     close(fds_system);
 	return ZERO;
@@ -133,11 +133,11 @@ int Network::connect_switch(int switch1_number, int switch2_number, int port1_nu
     string message1 = make_connect_message(switch1_connection_pipe_path, switch2_connection_pipe_path);
 	string message2 = make_connect_message(switch2_connection_pipe_path, switch1_connection_pipe_path);
 
-	int fd_switch1 = open(switch1_pipe_path.c_str(), O_WRONLY);
+	int fd_switch1 = open(switch1_pipe_path.c_str(), O_RDWR);
     write(fd_switch1, (Message) message1.c_str(), strlen((Message) message1.c_str()) + ONE);
     close(fd_switch1);
 
-	int fd_switch2 = open(switch2_pipe_path.c_str(), O_WRONLY);
+	int fd_switch2 = open(switch2_pipe_path.c_str(), O_RDWR);
     write(fd_switch2, (Message) message2.c_str(), strlen((Message) message2.c_str()) + ONE);
     close(fd_switch2);
 	return ZERO;
@@ -179,7 +179,7 @@ int Network::send(int sender_number, int receiver_number, string file_path) {
 	vector<string> partitions = partition_content(content, MAX_FILE_PARTITION_SIZE);
 
 	string system_pipe_path = SYSTEM_PREFIX + to_string(sender_number);
-	int fds_system = open(system_pipe_path.c_str(), O_WRONLY);
+	int fds_system = open(system_pipe_path.c_str(), O_RDWR);
 	for (string partition : partitions) {
 		string message = string(SEND_COMMAND)
 				+ string(COMMAND_SEPARATOR)
@@ -194,7 +194,7 @@ int Network::send(int sender_number, int receiver_number, string file_path) {
 int Network::receive(int system_number) {
 
 	string system_pipe_path = SYSTEM_PREFIX + to_string(system_number);
-	int fds_system = open(system_pipe_path.c_str(), O_WRONLY);
+	int fds_system = open(system_pipe_path.c_str(), O_RDWR);
 
 	string message = RECEIVE_COMMAND;
 	write(fds_system, (Message) message.c_str(), message.size() + ONE);
@@ -207,7 +207,7 @@ vector<string> Network::partition_content(string content, int partition_size) {
 	int number_of_partitions = content.size() / partition_size + 1;
 	vector<string> partitions;
 	for (int i = 0; i < number_of_partitions - 1; i++) {
-		partitions.push_back(content.substr(i * partition_size, (i + 1) * partition_size));
+		partitions.push_back(content.substr(i * partition_size, partition_size));
 	}
 	partitions.push_back(content.substr((number_of_partitions - 1) * partition_size));
 	return partitions;
