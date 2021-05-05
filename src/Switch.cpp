@@ -9,6 +9,12 @@ int main(int argc, char const *argv[]) {
 	return ZERO;
 }
 
+Switch::Switch()
+: root_port(ZERO)
+, root_id(ZERO)
+, root_distance(ZERO) {
+}
+
 void Switch::start(const char* args) {
     set_props(args);
 
@@ -57,7 +63,7 @@ void Switch::start(const char* args) {
             for (int connection_pipe_fd : connection_pipe_fds)
                 close(connection_pipe_fd);
 
-            handle_ethernet_message(received_message, incomming_message_port);
+            handle_ports_message(received_message, incomming_message_port);
         }
 
         close(network_pipe_fd);
@@ -67,6 +73,9 @@ void Switch::start(const char* args) {
 void Switch::set_props(string data) {
     vector<string> info = split(data, PROPS_SEPARATOR);
     this->id = stoi(info[ID]);
+    this->root_id = stoi(info[ID]);
+    this->root_port = ZERO;
+    this->root_distance = ZERO;
     this->network_pipe_path = PATH_PREFIX + info[ID];
     this->number_of_ports = stoi(info[NUMBER_OF_PORTS]);
 }
@@ -91,15 +100,26 @@ void Switch::stp() {
     map<int, pair<string, string>>::iterator it;
     for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++) {
         int connection_pipe_fd = open(it->second.second.c_str(), O_RDWR);
-        string message = STP_COMMAND;
+        string message = make_stp_message();
         write(connection_pipe_fd, message.c_str(), strlen(message.c_str()) + ONE);
         close(connection_pipe_fd);
     }
 }
 
-string Switch::get_stp_message() {
+string Switch::make_stp_message() {
     string message = STP_COMMAND + ETHERNET_SEPERATOR;
     message += to_string(id) + ETHERNET_SEPERATOR;
+    message += to_string(root_id) + ETHERNET_SEPERATOR;
+    message += to_string(root_distance);
+    return message;
+}
+
+void Switch::handle_ports_message(char* message, int port) {
+    vector<string> info = split(message, ETHERNET_SEPERATOR);
+    if (info[COMMAND] == STP_COMMAND)
+        handle_stp_message(message, port);
+    else
+        handle_ethernet_message(message, port);
 }
 
 void Switch::handle_ethernet_message(char* message, int port) {
@@ -123,4 +143,9 @@ void Switch::handle_ethernet_message(char* message, int port) {
             close(connection_pipe_fd);
         }
     }
+}
+
+void Switch::handle_stp_message(char* message, int port) {
+    vector<string> info = split(message, ETHERNET_SEPERATOR);
+
 }

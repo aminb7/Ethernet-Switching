@@ -215,8 +215,8 @@ int Network::stp() {
 		int fd = open(switch_pipe_path.c_str(), O_RDWR);
     	write(fd, (Message) message.c_str(), strlen((Message) message.c_str()) + ONE);
     	close(fd);
-		return ZERO;
 	}
+	return ZERO;
 }
 
 vector<string> Network::partition_content(string content, int partition_size) {
