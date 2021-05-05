@@ -161,6 +161,8 @@ void Switch::handle_stp_message(char* message, int port) {
         this->root_distance = incoming_root_distance + 1;
         map<int, pair<string, string>>::iterator it;
         for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++) {
+            if (it->first == port)
+                continue;
             int connection_pipe_fd = open(it->second.second.c_str(), O_RDWR);
             string message = make_stp_message();
             write(connection_pipe_fd, message.c_str(), strlen(message.c_str()) + ONE);
@@ -168,7 +170,19 @@ void Switch::handle_stp_message(char* message, int port) {
         }
     }
     else {
-        cout << "port " << port << "removed" << endl;
-        connection_pipe_paths.erase(port);
+        bool is_designated = false;
+        if (incoming_root_id > root_id)
+            is_designated = true;
+        else if (incoming_root_id == root_id) {
+            if (root_distance < incoming_root_distance)
+                is_designated = true;
+            else if (root_distance == incoming_root_distance)
+                is_designated = id < incoming_id;
+        }
+
+        if (!is_designated) {
+            cout << "port " << port << " in switch " << id << " removed" << endl;
+            connection_pipe_paths.erase(port);
+        }
     }
 }
