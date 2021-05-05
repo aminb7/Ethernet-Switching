@@ -207,7 +207,7 @@ int Network::receive(int system_number) {
 }
 
 int Network::stp() {
-	
+	return ZERO;
 }
 
 vector<string> Network::partition_content(string content, int partition_size) {

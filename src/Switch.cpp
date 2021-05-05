@@ -57,7 +57,7 @@ void Switch::start(const char* args) {
             for (int connection_pipe_fd : connection_pipe_fds)
                 close(connection_pipe_fd);
 
-            handle_ethernet_message(received_message, incomming_message_port);
+            handle_ports_message(received_message, incomming_message_port);
         }
 
         close(network_pipe_fd);
@@ -84,6 +84,14 @@ void Switch::connect(string read_path, string write_path) {
 	    connection_pipe_paths.insert({stoi(parts[PORT_NUMBER]), make_pair(read_path, write_path)});
 }
 
+void Switch::handle_ports_message(char* message, int port) {
+    vector<string> info = split(message, ETHERNET_SEPERATOR);
+    if (info[COMMAND] == STP_COMMAND)
+        handle_stp_message(message, port);
+    else
+        handle_ethernet_message(message, port);
+}
+
 void Switch::handle_ethernet_message(char* message, int port) {
     vector<string> info = split(message, ETHERNET_SEPERATOR);
     if (lookup.find(info[SRC_ADDR_IDX]) == lookup.end()) 
@@ -105,4 +113,8 @@ void Switch::handle_ethernet_message(char* message, int port) {
             close(connection_pipe_fd);
         }
     }
+}
+
+void Switch::handle_stp_message(char* message, int port) {
+
 }
