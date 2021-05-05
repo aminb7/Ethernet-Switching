@@ -31,9 +31,8 @@ void System::start(const char* args) {
             maxfd = connection_pipe_fd > network_pipe_fd ? connection_pipe_fd : network_pipe_fd;
             FD_SET(connection_pipe_fd, &fds);
         }
-        // cout << "----------id: " << id << "  waiting for message -----------------\n";
+
         activity = select(maxfd + 1, &fds, NULL, NULL, NULL);
-        // cout << "-------------id: " << id << "------------------------------------------\n";
         if (activity < 0)
             return;
 

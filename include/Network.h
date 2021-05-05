@@ -24,7 +24,7 @@
 #define CONNECT_SWITCH_COMMAND "ConnectSwitch"
 #define SEND_COMMAND "Send"
 #define RECEIVE_COMMAND "Receive"
-#define STP_COMMAND "STP"
+#define STP_COMMAND "Stp"
 #define QUIT_COMMAND "Quit"
 #define SWITCH_PREFIX "switch"
 #define SYSTEM_PREFIX "system"

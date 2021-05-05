@@ -109,7 +109,7 @@ void Switch::stp() {
 }
 
 string Switch::make_stp_message() {
-    string message = STP_COMMAND + ETHERNET_SEPERATOR;
+    string message = "Stp%";
     message += to_string(id) + ETHERNET_SEPERATOR;
     message += to_string(root_id) + ETHERNET_SEPERATOR;
     message += to_string(root_distance);
@@ -167,6 +167,8 @@ void Switch::handle_stp_message(char* message, int port) {
             close(connection_pipe_fd);
         }
     }
-    else
+    else {
+        cout << "port " << port << "removed" << endl;
         connection_pipe_paths.erase(port);
+    }
 }
