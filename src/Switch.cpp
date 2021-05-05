@@ -147,7 +147,7 @@ void Switch::handle_ethernet_message(char* message, int port) {
     }
 }
 
-void Switch::handle_stp_message(char* message, int port) {
+/*void Switch::handle_stp_message(char* message, int port) {
     vector<string> info = split(message, ETHERNET_SEPERATOR);
     int incoming_id = stoi(info[ARG1]);
     int incoming_root_id = stoi(info[ARG2]);
@@ -182,7 +182,69 @@ void Switch::handle_stp_message(char* message, int port) {
 
         if (!is_designated) {
             cout << "port " << port << " in switch " << id << " removed" << endl;
+            cout << "> ";
             connection_pipe_paths.erase(port);
         }
     }
+}*/
+
+void Switch::handle_stp_message(char* message, int port) {
+    vector<string> info = split(message, ETHERNET_SEPERATOR);
+    int incoming_id = stoi(info[ARG1]);
+    int incoming_root_id = stoi(info[ARG2]);
+    int incoming_root_distance = stoi(info[ARG3]);
+    bool is_better = false;
+     if (incoming_root_id < this->root_id) {
+         if (incoming_root_distance == this->root_distance) 
+            is_better = (incoming_id <= this->sender_id);
+        else 
+            is_better = (incoming_root_distance < this->root_distance);
+     }
+     else 
+        is_better = (incoming_root_id < this->root_id);
+
+
+    if (is_better) {
+        this->root_port = port;
+        this->root_id = incoming_root_id;
+        this->sender_id = incoming_id;
+        this->root_distance = incoming_root_distance;
+        // map<int, pair<string, string>>::iterator it;
+        // for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++) {
+        //     if (it->first == port)
+        //         continue;
+        //     int connection_pipe_fd = open(it->second.second.c_str(), O_RDWR);
+        //     string message = make_stp_message();
+        //     write(connection_pipe_fd, message.c_str(), strlen(message.c_str()) + ONE);
+        //     close(connection_pipe_fd);
+        // }
+    }
+    else {
+        bool is_designated = false;
+        if (incoming_root_id > root_id)
+            is_designated = false;
+
+        else if (root_distance + 1 == incoming_root_distance)
+            is_designated = (this->sender_id > incoming_id);
+
+        else 
+            is_designated = (root_distance + 1 > incoming_root_distance);
+
+
+        if (is_designated) {
+            cout << "port " << port << " in switch " << id << " removed" << endl;
+            cout << "> ";
+            connection_pipe_paths.erase(port);
+        }
+    }
+
+    map<int, pair<string, string>>::iterator it;
+        for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++) {
+            if (it->first == port)
+                continue;
+            int connection_pipe_fd = open(it->second.second.c_str(), O_RDWR);
+            string message = make_stp_message();
+            write(connection_pipe_fd, message.c_str(), strlen(message.c_str()) + ONE);
+            close(connection_pipe_fd);
+        }
 }
