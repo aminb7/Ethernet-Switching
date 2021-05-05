@@ -138,5 +138,8 @@ void Switch::handle_stp_message(char* message, int port) {
         this->root_id = incoming_root_id;
         this->sender_id = incoming_id;
         this->root_distance = incoming_root_distance + 1;
+        
     }
+    else
+        connection_pipe_paths.erase(port);
 }
