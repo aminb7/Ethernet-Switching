@@ -38,6 +38,9 @@ void Network::handle_command(string command) {
 	else if (command_parts[COMMAND] == RECEIVE_COMMAND)
 		receive(stoi(command_parts[ARG1]));
 
+	else if (command_parts[COMMAND] == STP_COMMAND)
+		stp();
+
 	else 
 		cout << "Invalid command!" << NEW_LINE;
 }
@@ -201,6 +204,10 @@ int Network::receive(int system_number) {
 
 	close(fds_system);
 	return ZERO;
+}
+
+int Network::stp() {
+	
 }
 
 vector<string> Network::partition_content(string content, int partition_size) {

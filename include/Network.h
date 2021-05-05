@@ -24,6 +24,7 @@
 #define CONNECT_SWITCH_COMMAND "ConnectSwitch"
 #define SEND_COMMAND "Send"
 #define RECEIVE_COMMAND "Receive"
+#define STP_COMMAND "STP"
 #define QUIT_COMMAND "Quit"
 #define SWITCH_PREFIX "switch"
 #define SYSTEM_PREFIX "system"
@@ -62,6 +63,7 @@ public:
     int receive(int system_number);
     int connect(int system_number, int switch_number, int port_number);
     int connect_switch(int switch1_number, int switch2_number, int port1_number, int port2_number);
+    int stp();
 
     std::string make_switch_message(int number_of_ports, int switch_number);
     std::string make_connect_pipe_path(int system_number, int switch_number, int port_number);
