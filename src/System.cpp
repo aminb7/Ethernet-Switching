@@ -102,6 +102,8 @@ void System::network_receive() {
 
 void System::handle_ethernet_message(char* message) {
     vector<string> info = split(message, ETHERNET_SEPERATOR);
+    if (info[COMMAND] == STP_COMMAND)
+        return;
     if (stoi(info[DST_ADDR_IDX]) == id)
         message_queue.push(EthernetFrame::decode(message));
 }

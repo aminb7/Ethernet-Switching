@@ -23,6 +23,7 @@
 #define CONNECT_COMMAND "Connect"
 #define SEND_COMMAND "Send"
 #define RECEIVE_COMMAND "Receive"
+#define STP_COMMAND "Stp"
 #define COMMAND 0
 #define ARG1 1
 #define ARG2 2
