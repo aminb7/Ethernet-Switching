@@ -36,7 +36,7 @@
 
 class Switch {
 public:
-    Switch() = default;
+    Switch();
     ~Switch() = default;
     void start(const char* args);
     void set_props(std::string data);
@@ -51,6 +51,9 @@ public:
 private:
     int id;
     int number_of_ports;
+    int root_port;
+    int root_id;
+    int root_distance;
     std::string network_pipe_path;
     std::map<std::string, int> lookup;
     std::map<int, std::pair<std::string, std::string>> connection_pipe_paths;

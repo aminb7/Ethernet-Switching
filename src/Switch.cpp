@@ -9,6 +9,12 @@ int main(int argc, char const *argv[]) {
 	return ZERO;
 }
 
+Switch::Switch()
+: root_port(ZERO)
+, root_id(ZERO)
+, root_distance(ZERO) {
+}
+
 void Switch::start(const char* args) {
     set_props(args);
 
@@ -116,5 +122,6 @@ void Switch::handle_ethernet_message(char* message, int port) {
 }
 
 void Switch::handle_stp_message(char* message, int port) {
-
+    vector<string> info = split(message, ETHERNET_SEPERATOR);
+    
 }
