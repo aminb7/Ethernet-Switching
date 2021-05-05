@@ -207,7 +207,16 @@ int Network::receive(int system_number) {
 }
 
 int Network::stp() {
-	
+	map<int, Pid>::iterator it;
+	for (it = switches.begin(); it != switches.end(); it++) {
+		int switch_number = it->first;
+		string switch_pipe_path = SWITCH_PREFIX + to_string(switch_number);
+		string message = STP_COMMAND;
+		int fd = open(switch_pipe_path.c_str(), O_RDWR);
+    	write(fd, (Message) message.c_str(), strlen((Message) message.c_str()) + ONE);
+    	close(fd);
+		return ZERO;
+	}
 }
 
 vector<string> Network::partition_content(string content, int partition_size) {
