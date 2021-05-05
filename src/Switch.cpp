@@ -87,12 +87,33 @@ void Switch::handle_network_command(char* message) {
 
     if (info[COMMAND] == CONNECT_COMMAND || info[COMMAND] == CONNECT_SWITCH_COMMAND) 
         connect(info[ARG2], info[ARG1]);
+
+    if (info[COMMAND] == STP_COMMAND)
+        stp();
 }
 
 void Switch::connect(string read_path, string write_path) {
 	vector<string> parts = split(read_path, PATH_SEPARATOR);
     if (connection_pipe_paths.find(stoi(parts[PORT_NUMBER])) == connection_pipe_paths.end())
 	    connection_pipe_paths.insert({stoi(parts[PORT_NUMBER]), make_pair(read_path, write_path)});
+}
+
+void Switch::stp() {
+    map<int, pair<string, string>>::iterator it;
+    for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++) {
+        int connection_pipe_fd = open(it->second.second.c_str(), O_RDWR);
+        string message = make_stp_message();
+        write(connection_pipe_fd, message.c_str(), strlen(message.c_str()) + ONE);
+        close(connection_pipe_fd);
+    }
+}
+
+string Switch::make_stp_message() {
+    string message = STP_COMMAND + ETHERNET_SEPERATOR;
+    message += to_string(id) + ETHERNET_SEPERATOR;
+    message += to_string(root_id) + ETHERNET_SEPERATOR;
+    message += to_string(root_distance);
+    return message;
 }
 
 void Switch::handle_ports_message(char* message, int port) {

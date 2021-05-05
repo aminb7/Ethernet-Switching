@@ -43,11 +43,13 @@ public:
     void set_props(std::string data);
     void handle_network_command(char* message);
     void connect(std::string read_path, std::string write_path);
+    void stp();
     void handle_ports_message(char* message, int port);
     void handle_ethernet_message(char* message, int port);
     void handle_stp_message(char* message, int port);
     int get_id() {return id;}
     std::string get_path() {return network_pipe_path;}
+    std::string make_stp_message();
 
 private:
     int id;
