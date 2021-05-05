@@ -73,6 +73,9 @@ void Switch::start(const char* args) {
 void Switch::set_props(string data) {
     vector<string> info = split(data, PROPS_SEPARATOR);
     this->id = stoi(info[ID]);
+    this->root_id = stoi(info[ID]);
+    this->root_port = ZERO;
+    this->root_distance = ZERO;
     this->network_pipe_path = PATH_PREFIX + info[ID];
     this->number_of_ports = stoi(info[NUMBER_OF_PORTS]);
 }
@@ -123,5 +126,5 @@ void Switch::handle_ethernet_message(char* message, int port) {
 
 void Switch::handle_stp_message(char* message, int port) {
     vector<string> info = split(message, ETHERNET_SEPERATOR);
-    
+
 }
