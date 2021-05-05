@@ -168,7 +168,8 @@ void Switch::handle_stp_message(char* message, int port) {
         }
     }
     else {
-        cout << "port " << port << "removed" << endl;
+        cout << "port " << port << " from switch" << id << " has been removed!" << endl;
+        cout << "> ";
         connection_pipe_paths.erase(port);
     }
 }

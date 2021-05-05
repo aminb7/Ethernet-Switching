@@ -21,10 +21,10 @@ std::string EthernetFrame::encode(const EthernetFrame ethernet_frame) {
             + ethernet_frame.content;
 }
 
-std::string EthernetFrame::getContent() {
+std::string EthernetFrame::get_content() {
     return content;
 }
 
-int EthernetFrame::getSourceAddress() {
+int EthernetFrame::get_src_address() {
     return src_address;
 }

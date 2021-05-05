@@ -89,8 +89,8 @@ void System::network_send(string ethernet_message) {
 void System::network_receive() {
     if (!message_queue.empty()) {
         EthernetFrame frame = message_queue.front();
-        cout << "Source Address: " << frame.getSourceAddress() << NEW_LINE;
-        cout << "Content: " << frame.getContent() << NEW_LINE;
+        cout << "Source Address: " << frame.get_src_address() << NEW_LINE;
+        cout << "Content: " << frame.get_content() << NEW_LINE;
         message_queue.pop();
     }
     else {
