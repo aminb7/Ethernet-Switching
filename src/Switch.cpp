@@ -11,6 +11,7 @@ int main(int argc, char const *argv[]) {
 
 Switch::Switch()
 : root_port(ZERO)
+, sender_id(ZERO)
 , root_id(ZERO)
 , root_distance(ZERO) {
 }
@@ -74,6 +75,7 @@ void Switch::set_props(string data) {
     vector<string> info = split(data, PROPS_SEPARATOR);
     this->id = stoi(info[ID]);
     this->root_id = stoi(info[ID]);
+    this->sender_id = stoi(info[ID]);
     this->root_port = ZERO;
     this->root_distance = ZERO;
     this->network_pipe_path = PATH_PREFIX + info[ID];
@@ -126,5 +128,15 @@ void Switch::handle_ethernet_message(char* message, int port) {
 
 void Switch::handle_stp_message(char* message, int port) {
     vector<string> info = split(message, ETHERNET_SEPERATOR);
-
+    int incoming_id = stoi(info[ARG1]);
+    int incoming_root_id = stoi(info[ARG2]);
+    int incoming_root_distance = stoi(info[ARG3]);
+    if ((incoming_id < this->root_id)
+            || (incoming_root_id == this->root_id && incoming_root_distance < this->root_distance)
+            || (incoming_root_id == this->root_id && incoming_root_distance == this->root_distance && incoming_id < this->sender_id)) {
+        this->root_port = port;
+        this->root_id = incoming_root_id;
+        this->sender_id = incoming_id;
+        this->root_distance = incoming_root_distance + 1;
+    }
 }
