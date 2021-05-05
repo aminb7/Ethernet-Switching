@@ -29,6 +29,7 @@
 #define PORT_NUMBER 3
 #define ARG1 1
 #define ARG2 2
+#define ARG3 3
 #define ID 0
 #define NUMBER_OF_PORTS 1
 #define DATA 1
@@ -54,6 +55,7 @@ private:
     int id;
     int number_of_ports;
     int root_port;
+    int sender_id;
     int root_id;
     int root_distance;
     std::string network_pipe_path;
