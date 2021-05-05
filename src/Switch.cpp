@@ -88,7 +88,7 @@ void Switch::handle_network_command(char* message) {
     if (info[COMMAND] == CONNECT_COMMAND || info[COMMAND] == CONNECT_SWITCH_COMMAND) 
         connect(info[ARG2], info[ARG1]);
 
-    if (info[COMMAND] == STP_COMMAND)
+    else if (info[COMMAND] == STP_COMMAND)
         stp();
 }
 
@@ -159,7 +159,13 @@ void Switch::handle_stp_message(char* message, int port) {
         this->root_id = incoming_root_id;
         this->sender_id = incoming_id;
         this->root_distance = incoming_root_distance + 1;
-        
+        map<int, pair<string, string>>::iterator it;
+        for (it = connection_pipe_paths.begin(); it != connection_pipe_paths.end(); it++) {
+            int connection_pipe_fd = open(it->second.second.c_str(), O_RDWR);
+            string message = make_stp_message();
+            write(connection_pipe_fd, message.c_str(), strlen(message.c_str()) + ONE);
+            close(connection_pipe_fd);
+        }
     }
     else
         connection_pipe_paths.erase(port);
